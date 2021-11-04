@@ -23,7 +23,7 @@ def main():
     parser.add_argument("--alpha_rs", type=float, default=0.1, help="percent of words in each sentence to be swapped")
     parser.add_argument("--alpha_rd", type=float, default=0.1, help="percent of words in each sentence to be deleted")
     parser.add_argument("--stop_words_path", default="resources/stop_words/ja.txt", help="file path to stop words")
-    parser.add_argument("--wordnet_path", default="wnjpn.db", help="file path to wordnet db")
+    parser.add_argument("--wordnet_path", default="resources/wnjpn.db", help="file path to wordnet db")
     parser.add_argument("--lang", type=Lang, default=Lang.JA, choices=list(Lang), help="lang")
     parser.add_argument("--seed", type=int, default=None, help="random seed")
     args = parser.parse_args()
