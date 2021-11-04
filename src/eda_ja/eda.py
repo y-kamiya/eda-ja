@@ -9,6 +9,8 @@ import sqlite3
 import pandas as pd
 from nltk.corpus import wordnet
 
+from . import file_utils
+
 
 @dataclass
 class Words:
@@ -188,13 +190,16 @@ class Eda():
 
 
 class EdaJa(Eda):
+    URL_WORDNET = "http://compling.hss.ntu.edu.sg/wnja/data/1.1/wnjpn.db.gz"
+
     def __init__(self, stop_words_path, wordnet_path):
         super().__init__(stop_words_path)
         self.tagger = MeCab.Tagger()
         self.wordnet = self._create_wordnet(wordnet_path)
 
     def _create_wordnet(self, wordnet_path):
-        conn = sqlite3.connect(wordnet_path)
+        path = file_utils.get_from_cache(wordnet_path, self.URL_WORDNET)
+        conn = sqlite3.connect(path)
         query = 'SELECT synset,lemma FROM sense,word USING (wordid) WHERE sense.lang="jpn"'
         return pd.read_sql(query, conn)
 
@@ -263,8 +268,15 @@ class EdaEn(Eda):
         return new_words
 
     def _get_synonyms(self, word):
+        try:
+            synsets = wordnet.synsets(word)
+        except LookupError:
+            import nltk
+            nltk.download('wordnet')
+            synsets = wordnet.synsets(word)
+
         synonyms = set()
-        for syn in wordnet.synsets(word): 
+        for syn in synsets:
             for l in syn.lemmas(): 
                 synonym = l.name().replace("_", " ").replace("-", " ").lower()
                 synonym = "".join([char for char in synonym if char in ' qwertyuiopasdfghjklzxcvbnm'])

@@ -1,5 +1,8 @@
 ### https://raw.github.com/github/gitignore/c0c1a480a906df0e023f3250cf2ad82f1612be67/python.gitignore
 
+resources/*.db
+resources/*.gz
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
