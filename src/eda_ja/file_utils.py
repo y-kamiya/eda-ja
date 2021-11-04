@@ -1,11 +1,13 @@
 from __future__ import annotations
-import os
-import tempfile
+
 import functools
 import gzip
+import os
 import shutil
-import requests
+import tempfile
 from typing import IO
+
+import requests
 from tqdm.auto import tqdm
 
 
@@ -18,7 +20,9 @@ def get_from_cache(local_path: str, url: str) -> str:
 
     download_path = os.path.join(cache_dir, os.path.basename(url))
     if not os.path.exists(download_path):
-        temp_file_manager = functools.partial(tempfile.NamedTemporaryFile, mode="wb", dir=cache_dir, delete=False)
+        temp_file_manager = functools.partial(
+            tempfile.NamedTemporaryFile, mode="wb", dir=cache_dir, delete=False
+        )
         with temp_file_manager() as temp_file:
             http_get(url, temp_file)
 
