@@ -44,7 +44,7 @@ class Eda():
 
     def synonym_replacement(self, words: Words, n: int):
         new_words = words.raw.copy()
-        random_word_indexes = list(set([i for i, word in enumerate(words.raw) if word not in self.stop_words]))
+        random_word_indexes = [i for i, word in enumerate(words.raw) if word not in self.stop_words]
         random.shuffle(random_word_indexes)
 
         num_replaced = 0
@@ -228,7 +228,7 @@ class EdaEn(Eda):
 
     def _parse(self, sentence) -> Words:
         words = [word for word in sentence.split(' ') if word != '']
-        return Words(words, [])
+        return Words(words, words)
 
     def clean(self, line):
         line = super().clean(line)
@@ -245,27 +245,6 @@ class EdaEn(Eda):
         if clean_line[0] == ' ':
             clean_line = clean_line[1:]
         return clean_line
-
-    def synonym_replacement(self, words: Words, n: int):
-        new_words = words.raw.copy()
-        random_word_list = list(set([word for word in words.raw if word not in self.stop_words]))
-        random.shuffle(random_word_list)
-        num_replaced = 0
-        for random_word in random_word_list:
-            synonyms = self._get_synonyms(random_word)
-            if len(synonyms) >= 1:
-                synonym = random.choice(list(synonyms))
-                new_words = [synonym if word == random_word else word for word in new_words]
-                num_replaced += 1
-
-            if num_replaced >= n:
-                break
-
-        #this is stupid but we need it, trust me
-        sentence = ' '.join(new_words)
-        new_words = sentence.split(' ')
-
-        return new_words
 
     def _get_synonyms(self, word):
         try:

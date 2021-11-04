@@ -18,5 +18,6 @@ def test_synonym_replacement(mocker, eda):
 
     mocker.patch.object(eda, "_get_synonyms", side_effect=mock_get_synonyms)
 
-    result = eda.synonym_replacement(Words(["It", "is", "sunny"], []), 1)
+    data = ["It", "is", "sunny"]
+    result = eda.synonym_replacement(Words(data, data), 1)
     assert result == ["It", "is", "rainy"]
