@@ -53,7 +53,7 @@ def main():
     )
     parser.add_argument(
         "--stop_words_path",
-        default="resources/stop_words/ja.txt",
+        default="default",
         help="file path to stop words",
     )
     parser.add_argument(

@@ -3,6 +3,7 @@ name = "eda-ja"
 version = "0.1.0"
 description = ""
 authors = ["Yuji Kamiya <y.kamiya0@gmail.com>"]
+include = ["resources"]
 
 [tool.poetry.dependencies]
 python = "^3.7.1"
