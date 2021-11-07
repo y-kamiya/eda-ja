@@ -30,7 +30,7 @@ class Words:
 
 
 class Eda:
-    def __init__(self, stop_words_path):
+    def __init__(self, stop_words_path="default"):
         self.stop_words = self._build_stop_words(stop_words_path)
 
     @abstractmethod
@@ -209,7 +209,7 @@ class Eda:
 class EdaJa(Eda):
     URL_WORDNET = "http://compling.hss.ntu.edu.sg/wnja/data/1.1/wnjpn.db.gz"
 
-    def __init__(self, stop_words_path, wordnet_path):
+    def __init__(self, stop_words_path="default", wordnet_path="wnjpn.db"):
         super().__init__(stop_words_path)
         self.tagger = MeCab.Tagger()
         self.wordnet = self._create_wordnet(wordnet_path)
