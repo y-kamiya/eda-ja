@@ -16,6 +16,8 @@ def get_from_cache(local_path: str, url: str) -> str:
         return local_path
 
     cache_dir = os.path.dirname(local_path)
+    if not cache_dir:
+        cache_dir = os.getcwd()
     os.makedirs(cache_dir, exist_ok=True)
 
     download_path = os.path.join(cache_dir, os.path.basename(url))
