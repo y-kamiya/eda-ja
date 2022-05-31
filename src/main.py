@@ -53,11 +53,11 @@ def main():
     )
     parser.add_argument(
         "--stop_words_path",
-        default="resources/stop_words/ja.txt",
+        default="default",
         help="file path to stop words",
     )
     parser.add_argument(
-        "--wordnet_path", default="resources/wnjpn.db", help="file path to wordnet db"
+        "--wordnet_path", default="wnjpn.db", help="file path to wordnet db"
     )
     parser.add_argument(
         "--lang", type=Lang, default=Lang.JA, choices=list(Lang), help="lang"

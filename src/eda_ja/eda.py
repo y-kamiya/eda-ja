@@ -4,7 +4,9 @@ import os
 import random
 import re
 import sqlite3
+from abc import abstractmethod
 from dataclasses import dataclass
+from importlib.resources import read_text
 
 import MeCab
 import pandas as pd
@@ -28,20 +30,25 @@ class Words:
 
 
 class Eda:
-    def __init__(self, stop_words_path):
-        self.stop_words = []
-        if self._has_stop_words(stop_words_path):
+    def __init__(self, stop_words_path="default"):
+        self.stop_words = self._build_stop_words(stop_words_path)
+
+    @abstractmethod
+    def _stop_words_resource_default(self):
+        pass
+
+    def _build_stop_words(self, stop_words_path) -> list[str]:
+        if os.path.isfile(stop_words_path):
             with open(stop_words_path) as f:
-                self.stop_words = [line.strip() for line in f.readlines()]
+                return [line.strip() for line in f.readlines()]
 
-    def _has_stop_words(self, stop_words_path):
-        if stop_words_path is None:
-            return False
+        if stop_words_path == "default":
+            contents = read_text(
+                "eda_ja.resources.stop_words", self._stop_words_resource_default()
+            )
+            return [line.strip() for line in contents.split()]
 
-        if not os.path.isfile(stop_words_path):
-            return False
-
-        return True
+        return []
 
     def synonym_replacement(self, words: Words, n: int):
         new_words = words.raw.copy()
@@ -202,10 +209,13 @@ class Eda:
 class EdaJa(Eda):
     URL_WORDNET = "http://compling.hss.ntu.edu.sg/wnja/data/1.1/wnjpn.db.gz"
 
-    def __init__(self, stop_words_path, wordnet_path):
+    def __init__(self, stop_words_path="default", wordnet_path="wnjpn.db"):
         super().__init__(stop_words_path)
         self.tagger = MeCab.Tagger()
         self.wordnet = self._create_wordnet(wordnet_path)
+
+    def _stop_words_resource_default(self):
+        return "ja.txt"
 
     def _create_wordnet(self, wordnet_path):
         path = file_utils.get_from_cache(wordnet_path, self.URL_WORDNET)
@@ -235,6 +245,9 @@ class EdaJa(Eda):
 
 
 class EdaEn(Eda):
+    def _stop_words_resource_default(self):
+        return "en.txt"
+
     def _concat_words(self, words):
         return " ".join(words)
 
